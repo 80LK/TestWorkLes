@@ -10,15 +10,21 @@ import './styles/app.css';
 
 import Vue from "vue";
 import Vuetify from "vuetify";
-import 'vuetify/dist/vuetify.min.css'
+import 'vuetify/dist/vuetify.min.css';
+import VueRouter from 'vue-router';
+
 import App from "./App.vue";
 
 (()=>{
     Vue.use(Vuetify);
+    Vue.use(VueRouter)
 
     new Vue({
         el: "#app",
         vuetify: new Vuetify(),
+        router:new VueRouter({
+            mode: 'history',
+        }),
         render:k=>k(App)
     })
 })();
