@@ -1,5 +1,4 @@
 <template>
-  <v-container>
     <v-row>
       <v-col
           v-for="route in routes"
@@ -8,22 +7,19 @@
       >
         <router-link v-bind:to="route.path" v-slot="{ navigate }">
           <v-card @click="navigate">
-            <v-card-text>{{ route.title }}</v-card-text>
+            <v-card-title>{{ route.title }}</v-card-title>
           </v-card>
         </router-link>
       </v-col>
     </v-row>
-  </v-container>
 </template>
 
 <script>
-import routes from './routes';
+import routes from '../routes/nav_routes';
 
 export default {
   name: "Home",
-  data:()=>({
-    routes
-  })
+  data:()=>({ routes })
 }
 </script>
 
