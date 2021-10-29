@@ -24,7 +24,6 @@ class ApiProviderController extends AbstractController
             ->getRepository(Provider::class)
             ->find($id);
 
-
         if (!$provider)
             return $this->json(['error'=>'No provider found for id '.$id], 404);
 
