@@ -1,3 +1,5 @@
-import Home from "./Home";
+import Test from "./Test";
 
-export default [Home];
+export default [
+    { path:"/test", component: Test, title: "Test", icon:"ab-testing"}
+];

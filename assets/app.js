@@ -14,6 +14,7 @@ import 'vuetify/dist/vuetify.min.css';
 import VueRouter from 'vue-router';
 
 import App from "./App.vue";
+import routes from "./routes/general_routes";
 
 (()=>{
     Vue.use(Vuetify);
@@ -24,6 +25,7 @@ import App from "./App.vue";
         vuetify: new Vuetify(),
         router:new VueRouter({
             mode: 'history',
+            routes
         }),
         render:k=>k(App)
     })
