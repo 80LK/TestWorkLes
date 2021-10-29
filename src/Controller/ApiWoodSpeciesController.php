@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class APIWoodSpeciesController extends AbstractController
+class ApiWoodSpeciesController extends AbstractController
 {
     #[Route('/api/wood_species', name: 'api_wood_species', methods: ["get"])]
     public function index(WoodSpeciesRepository $repository): Response
