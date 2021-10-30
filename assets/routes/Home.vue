@@ -3,7 +3,7 @@
       <v-col
           v-for="route in routes"
           :key="route.title"
-          cols="4"
+          cols="12" sm="6" md="4"
       >
         <router-link v-bind:to="route.path" v-slot="{ navigate }">
           <v-card @click="navigate">
