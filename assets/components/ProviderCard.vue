@@ -1,14 +1,23 @@
 <template>
   <v-card>
-    <v-card-title>{{ provider.companyName || fullName }}</v-card-title>
-    <v-card-subtitle>
+    <v-skeleton-loader v-if="loading" type="article" />
+
+
+    <v-card-title v-if="!loading">
+      {{ provider.companyName || fullName }}
+    </v-card-title>
+    <v-card-subtitle v-if="!loading">
       {{ provider.companyName ? fullName : "Физ. лицо" }}
     </v-card-subtitle>
-    <v-card-text>
-      <p> <v-icon small>mdi-map-marker</v-icon>{{ provider.address }} </p>
-      <p> <v-icon small>mdi-phone</v-icon>{{ provider.phone }} </p>
+    <v-card-text v-if="!loading">
+      <p>
+        <v-icon small>mdi-map-marker</v-icon>{{ provider.address }}
+      </p>
+      <p>
+        <v-icon small>mdi-phone</v-icon> {{ provider.phone }}
+      </p>
     </v-card-text>
-    <v-card-actions>
+    <v-card-actions  v-if="!loading">
       <v-btn text color="warning" @click="$emit('edit', provider)">Редактировать</v-btn>
       <v-btn text color="error" @click="$emit('delete', provider)">Удалить</v-btn>
     </v-card-actions>
@@ -19,7 +28,8 @@
 export default {
   name: "ProviderCard",
   props:{
-    provider:Object
+    loading: Boolean,
+    provider: Object
   },
   computed:{
     fullName:function(){

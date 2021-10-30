@@ -15,17 +15,13 @@ class ApiProviderController extends AbstractController
     #[Route('/api/provider/list', name: 'api_get_providers', methods: ["get"])]
     public function index(ProviderRepository $repository): Response
     {
-        $providers = $repository->findAll();
+        $providers = $repository->findBy([],["id"=>"ASC"]);
         return $this->json($providers);
     }
 
     #[Route('/api/provider/{id<\d+>}', name:"api_get_provider", methods: ["get"])]
-    public function getProvider(int $id): Response
+    public function getProvider(?Provider $provider, int $id): Response
     {
-        $provider = $this->getDoctrine()
-            ->getRepository(Provider::class)
-            ->find($id);
-
         if (!$provider)
             return $this->json(['error'=>'No provider found for id '.$id], 404);
 
@@ -64,13 +60,9 @@ class ApiProviderController extends AbstractController
     }
 
     #[Route('/api/provider/{id<\d+>}', name:"api_edit_provider", methods: ["post"])]
-    public function editProvider(Int $id, Request $request, ValidatorInterface $validator){
-        $entityManager = $this->getDoctrine()->getManager();
-        $provider = $entityManager->getRepository(Provider::class)->find($id);
-
+    public function editProvider(?Provider $provider,Int $id, Request $request, ValidatorInterface $validator){
         if (!$provider)
             return $this->json(["error"=>"No provider found for id ".$id], 404);
-
 
         if($name = $request->request->get("name"))
             $provider->setName($name);
@@ -89,6 +81,7 @@ class ApiProviderController extends AbstractController
         else if($companyName == "")
             $provider->setCompanyName(null);
 
+        $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
 
         return $this->json(["success"=>$provider], 200);
