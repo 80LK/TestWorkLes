@@ -7,7 +7,7 @@
       >
         <router-link v-bind:to="route.path" v-slot="{ navigate }">
           <v-card @click="navigate">
-            <v-card-title>{{ route.title }}</v-card-title>
+            <v-card-title>{{ route.name }}</v-card-title>
           </v-card>
         </router-link>
       </v-col>

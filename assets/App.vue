@@ -1,9 +1,10 @@
+
 <template>
   <v-app id="inspire">
 
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>{{ title }}</v-toolbar-title>
+      <v-toolbar-title>{{ $route.name }}</v-toolbar-title>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -45,7 +46,7 @@
 
             <v-list-item-content>
               <v-list-item-title>
-                {{ item.title }}
+                {{ item.name }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -64,13 +65,9 @@
 
 <script>
   import routes from "./routes/nav_routes";
-  import Home from "./routes/Home";
 
   export default {
     name: "App",
-    components:{
-      Home
-    },
     data: () => {
       return {
         drawer: null,
