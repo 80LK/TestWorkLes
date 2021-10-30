@@ -32,4 +32,4 @@ import routes from "./routes/general_routes";
 })();
 
 // start the Stimulus application
-import './bootstrap';
+// import './bootstrap';
