@@ -117,7 +117,7 @@ class Provider
         return $this->company_name;
     }
 
-    public function setCompanyName(string $company_name): self
+    public function setCompanyName(?string $company_name): self
     {
         $this->company_name = $company_name;
 
