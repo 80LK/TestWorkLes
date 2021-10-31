@@ -1,12 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-skeleton-loader
-          v-if="loading"
-          type="table-thead, table-tbody"
-      />
-
-      <v-simple-table v-if="!loading">
+      <v-simple-table>
         <thead>
         <tr>
           <th class="text-left"> ID</th>
@@ -31,6 +26,26 @@
           <td>{{ new Date(item.date).toLocaleString() }}</td>
           <td>{{ item.note }}</td>
         </router-link>
+        <tr v-if="loading">
+          <td>
+            <v-skeleton-loader type="text"/>
+          </td>
+          <td>
+            <v-skeleton-loader type="text"/>
+          </td>
+          <td>
+            <v-skeleton-loader type="text"/>
+          </td>
+          <td>
+            <v-skeleton-loader type="text"/>
+          </td>
+          <td>
+            <v-skeleton-loader type="text"/>
+          </td>
+          <td>
+            <v-skeleton-loader type="text"/>
+          </td>
+        </tr>
         </tbody>
       </v-simple-table>
 
@@ -39,6 +54,7 @@
           fab
           fixed
           style="bottom: 16px; right:16px"
+          @click="open_dialog_add_delivery = true"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -48,11 +64,14 @@
 
 <script>
 import {getCompanyName} from "../utils/provider";
+import NewDelivery from "../dialoges/NewDelivery";
 
 export default {
   name: "Deliveries",
   data: () => ({
     loading: true,
+    open_dialog_add_delivery: false,
+
     deliveries: []
   }),
   methods: {
@@ -61,7 +80,7 @@ export default {
   async mounted() {
     const response = await fetch("/api/delivery/list");
     const deliveries = await response.json();
-    
+
     this.deliveries = deliveries;
     this.loading = false;
   }
