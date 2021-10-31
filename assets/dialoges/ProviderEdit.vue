@@ -3,6 +3,7 @@
       :value="isOpen"
       scrollable
       width="500"
+      @input="$emit('change', $event)"
   >
     <v-card>
       <v-card-title class="text-h5 grey lighten-2">
@@ -18,54 +19,54 @@
             v-model="valid"
         >
 
-          <v-checkbox label="Юр. лицо" v-model="is_jur"/>
+          <v-checkbox v-model="is_jur" label="Юр. лицо"/>
           <v-text-field
-              label="Имя компании"
+              v-model:value="companyName"
               :disabled="!is_jur"
               :rules="[v=> !is_jur || !!v || 'Обязательное поле!']"
-              required
-              v-model:value="companyName"/>
+              label="Имя компании"
+              required/>
 
           <v-text-field
+              v-model:value="surname"
+              :rules="[v=>!!v || 'Обязательное поле!']"
+              counter="255"
               label="Фамилия"
               required
-              :rules="[v=>!!v || 'Обязательное поле!']"
-              counter="255"
-              v-model:value="surname"
           />
           <v-text-field
+              v-model:value="name"
+              :rules="[v=>!!v || 'Обязательное поле!']"
+              counter="255"
               label="Имя"
               required
-              :rules="[v=>!!v || 'Обязательное поле!']"
-              counter="255"
-              v-model:value="name"
           />
           <v-text-field
-              label="Отчество"
-              required
+              v-model:value="fatherName"
               :rules="[v=>!!v || 'Обязательное поле!']"
               counter="255"
-              v-model:value="fatherName"
+              label="Отчество"
+              required
           />
 
           <v-text-field
+              v-model:value="phone"
+              :rules="[v=>!!v || 'Обязательное поле!', v=>/^\d+$/.test(v) || 'Номер телефона должен состоять из цифр']"
+              append-icon="mdi-phone"
+              counter="11"
               label="Телефон"
               required
-              v-model:value="phone"
-              append-icon="mdi-phone"
-              :rules="[v=>!!v || 'Обязательное поле!', v=>/^\d+$/.test(v) || 'Номер телефона должен состоять из цифр']"
-              counter="11"
           />
 
           <v-textarea
-              label="Адрес"
-              required
               v-model:value="address"
               :rules="[v=>!!v || 'Обязательное поле!']"
               append-icon="mdi-map-marker"
               auto-grow
-              rows="1"
               counter="1000"
+              label="Адрес"
+              required
+              rows="1"
           />
         </v-form>
       </v-card-text>
@@ -77,13 +78,15 @@
             color="success"
             text
             @click="save()"
-        > Сохранить </v-btn>
+        > Сохранить
+        </v-btn>
 
         <v-btn
             color="primary"
             text
             @click="cancel()"
-        > Отмена </v-btn>
+        > Отмена
+        </v-btn>
       </v-card-actions>
     </v-card>
 
@@ -102,56 +105,56 @@ import AgreeDialog from "./AgreeDialog";
 
 export default {
   name: "ProviderEdit",
-  components:{
+  components: {
     AgreeDialog
   },
-  data:function(){
+  data: function () {
     return {
       is_jur: false,
-      name:"", surname:"", fatherName:"",
+      name: "", surname: "", fatherName: "",
       companyName: "",
-      phone:"", address:"",
+      phone: "", address: "",
 
-      open_changenotsave:false,
-      valid:false
+      open_changenotsave: false,
+      valid: false
     }
   },
-  props:{
-    provider:Object,
-    opened:Boolean
+  props: {
+    provider: Object,
+    opened: Boolean
   },
-  methods:{
-    save(){
-      if(!(this.valid = this.$refs.form.validate()))
-          return;
+  methods: {
+    save() {
+      if (!(this.valid = this.$refs.form.validate()))
+        return;
 
-      if(this.hasChanges)
+      if (this.hasChanges)
         this.$emit("save", {
-          name:this.name,
-          surname:this.surname,
-          fatherName:this.fatherName,
-          phone:this.phone,
-          address:this.address,
-          companyName:this.is_jur ? this.companyName : ""
+          name: this.name,
+          surname: this.surname,
+          fatherName: this.fatherName,
+          phone: this.phone,
+          address: this.address,
+          companyName: this.is_jur ? this.companyName : ""
         });
       this.close();
     },
-    cancel(){
-      if(this.hasChanges)
+    cancel() {
+      if (this.hasChanges)
         this.open_changenotsave = true;
       else
         this.close()
     },
-    agreeNotSave(){
+    agreeNotSave() {
       this.close()
     },
-    close(){
-        this.$emit('change', false);
+    close() {
+      this.$emit('change', false);
     }
   },
-  computed:{
-    isOpen:function(){
-      if(this.provider){
+  computed: {
+    isOpen: function () {
+      if (this.provider) {
         this.name = this.provider.name;
         this.surname = this.provider.surname;
         this.fatherName = this.provider.fatherName;
@@ -161,33 +164,36 @@ export default {
 
         this.phone = this.provider.phone;
         this.address = this.provider.address;
-      }else{
+      } else {
         this.name =
-        this.surname =
-        this.fatherName =
-        this.companyName =
-        this.phone =
-        this.address = "";
+            this.surname =
+                this.fatherName =
+                    this.companyName =
+                        this.phone =
+                            this.address = "";
+
         this.is_jur = false;
+        if (this.$refs && this.$refs.form)
+          this.$refs.form.resetValidation();
       }
 
       return this.opened;
     },
-    hasChanges:function (){
-      if(this.provider){
+    hasChanges: function () {
+      if (this.provider) {
         return this.name !== this.provider.name ||
-        this.surname !== this.provider.surname ||
-        this.fatherName !== this.provider.fatherName ||
-        this.is_jur !== (!!this.provider.companyName) ||
-        (this.is_jur && this.companyName !== this.provider.companyName)  ||
-        this.phone!== this.provider.phone  ||
-        this.address !== this.provider.address;
-      }else{
+            this.surname !== this.provider.surname ||
+            this.fatherName !== this.provider.fatherName ||
+            this.is_jur !== (!!this.provider.companyName) ||
+            (this.is_jur && this.companyName !== this.provider.companyName) ||
+            this.phone !== this.provider.phone ||
+            this.address !== this.provider.address;
+      } else {
         return this.name !== "" ||
             this.surname !== "" ||
             this.fatherName !== "" ||
-            (this.is_jur && this.companyName !== "")  ||
-            this.phone !== ""  ||
+            (this.is_jur && this.companyName !== "") ||
+            this.phone !== "" ||
             this.address !== "";
       }
     }

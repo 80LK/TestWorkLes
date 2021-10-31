@@ -1,7 +1,8 @@
 <template>
   <v-dialog
-      v-model="opened"
+      :value="opened"
       width="500"
+      @input="$emit('change', $event)"
   >
     <v-card>
       <v-card-title class="text-h5">
@@ -30,22 +31,22 @@
 <script>
 export default {
   name: "ChangeNotSave",
-  props:{
-    title:String,
-    agreeTitle:String,
-    disagreeTitle:String,
-    opened:Boolean
+  props: {
+    title: String,
+    agreeTitle: String,
+    disagreeTitle: String,
+    opened: Boolean
   },
-  methods:{
-    disagree(){
+  methods: {
+    disagree() {
       this.close();
       this.$emit("disagree");
     },
-    agree(){
+    agree() {
       this.close();
       this.$emit("agree");
     },
-    close(){
+    close() {
       this.$emit("change", false);
     }
   },

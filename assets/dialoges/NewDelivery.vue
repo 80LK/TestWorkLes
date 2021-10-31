@@ -3,6 +3,7 @@
       :value="opened"
       scrollable
       width="500"
+      @input="$emit('change', $event)"
   >
     <v-card>
       <v-card-title class="text-h5 grey lighten-2">
@@ -236,6 +237,11 @@ export default {
       this.$emit('change', false);
     }
   },
+
+  model: {
+    prop: 'opened',
+    event: 'change'
+  },
   computed: {
     hasChanges: function () {
       return this.volume !== 0 ||
@@ -243,11 +249,7 @@ export default {
           this.provider !== null ||
           this.woodSpecies !== null;
     }
-  },
-  model: {
-    prop: 'opened',
-    event: 'change'
-  },
+  }
 }
 </script>
 
