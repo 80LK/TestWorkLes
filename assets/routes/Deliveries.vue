@@ -49,7 +49,7 @@
         </tbody>
       </v-simple-table>
 
-      <NewDelivery v-model="open_dialog_add_delivery"/>
+      <NewDelivery v-model="open_dialog_add_delivery" @save="save"/>
 
       <v-btn
           color="success"
@@ -78,7 +78,30 @@ export default {
     deliveries: []
   }),
   methods: {
-    getCompanyName: getCompanyName
+    getCompanyName: getCompanyName,
+    async save(new_data) {
+      this.loading = true;
+      new_data.date = new Date(new_data.date + " " + new_data.time).toISOString().slice(0, -5) + "+00:00";
+      delete new_data.time;
+
+      const data = new FormData();
+      for (const key in new_data)
+        data.append(key, new_data[key]);
+
+      const response = await fetch("/api/delivery", {
+        method: "post",
+        body: data
+      });
+      const json_response = await response.json();
+
+      if (json_response.error) {
+        alert(json_response.error);
+      } else {
+        const delivery = json_response.success;
+        this.deliveries.push(delivery);
+      }
+      this.loading = false;
+    }
   },
   async mounted() {
     const response = await fetch("/api/delivery/list");

@@ -218,7 +218,7 @@ export default {
           woodSpecies: this.woodSpecies,
           provider: this.provider,
           volume: this.volume,
-          note: this.note || null,
+          note: this.note,
           date: this.date,
           time: this.time,
         });
