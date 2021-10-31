@@ -1,4 +1,3 @@
-
 <template>
   <v-app id="inspire">
 
@@ -13,8 +12,8 @@
         temporary
     >
       <router-link
-          to="/"
-          v-slot="{ navigate }">
+          v-slot="{ navigate }"
+          to="/">
         <v-list-item @click="navigate">
           <v-list-item-icon>
             <v-icon>mdi-view-dashboard</v-icon>
@@ -23,21 +22,21 @@
 
             <v-list-item-title class="text-h6">{{ title }}</v-list-item-title>
 
-<!--            <v-list-item-subtitle>-->
-<!--              subtext-->
-<!--            </v-list-item-subtitle>-->
+            <!--            <v-list-item-subtitle>-->
+            <!--              subtext-->
+            <!--            </v-list-item-subtitle>-->
           </v-list-item-content>
         </v-list-item>
       </router-link>
 
       <v-divider></v-divider>
 
-      <v-list dense nav >
+      <v-list dense nav>
         <router-link
             v-for="item in items"
             :key="item.title"
-            v-bind:to="item.path"
             v-slot="{ navigate }"
+            v-bind:to="item.path"
         >
           <v-list-item link @click="navigate">
             <v-list-item-icon>
@@ -64,17 +63,17 @@
 </template>
 
 <script>
-  import routes from "./routes/nav_routes";
+import routes from "./routes/nav_routes";
 
-  export default {
-    name: "App",
-    data: () => {
-      return {
-        drawer: null,
-        items: routes,
-        right: null,
-        title: "Application"
-      }
+export default {
+  name: "App",
+  data: () => {
+    return {
+      drawer: null,
+      items: routes,
+      right: null,
+      title: "Application"
     }
   }
+}
 </script>
