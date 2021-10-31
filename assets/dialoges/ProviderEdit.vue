@@ -174,15 +174,22 @@ export default {
       return this.opened;
     },
     hasChanges:function (){
-      if(!this.provider) return true;
-
-      return this.name != this.provider.name ||
-      this.surname != this.provider.surname ||
-      this.fatherName != this.provider.fatherName ||
-      this.is_jur != (!!this.provider.companyName) ||
-      (this.is_jur && this.companyName != this.provider.companyName)  ||
-      this.phone!= this.provider.phone  ||
-      this.address != this.provider.address;
+      if(this.provider){
+        return this.name !== this.provider.name ||
+        this.surname !== this.provider.surname ||
+        this.fatherName !== this.provider.fatherName ||
+        this.is_jur !== (!!this.provider.companyName) ||
+        (this.is_jur && this.companyName !== this.provider.companyName)  ||
+        this.phone!== this.provider.phone  ||
+        this.address !== this.provider.address;
+      }else{
+        return this.name !== "" ||
+            this.surname !== "" ||
+            this.fatherName !== "" ||
+            (this.is_jur && this.companyName !== "")  ||
+            this.phone !== ""  ||
+            this.address !== "";
+      }
     }
   },
   model: {
