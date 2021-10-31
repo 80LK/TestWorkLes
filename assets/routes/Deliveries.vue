@@ -49,6 +49,8 @@
         </tbody>
       </v-simple-table>
 
+      <NewDelivery v-model="open_dialog_add_delivery"/>
+
       <v-btn
           color="success"
           fab
@@ -68,6 +70,7 @@ import NewDelivery from "../dialoges/NewDelivery";
 
 export default {
   name: "Deliveries",
+  components: {NewDelivery},
   data: () => ({
     loading: true,
     open_dialog_add_delivery: false,
