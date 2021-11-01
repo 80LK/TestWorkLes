@@ -67,10 +67,10 @@ class ApiDeliveryController extends AbstractController
         if (!$provider)
             return $this->json(['error' => 'No provider found for id ' . $providerId], 400);
 
-        $woodSpeciesId = (int)$request->request->get("provider");
+        $woodSpeciesId = (int)$request->request->get("woodSpecies");
         $woodSpecies = $manager->getRepository(WoodSpecies::class)->find($woodSpeciesId);
         if (!$woodSpecies)
-            return $this->json(['error' => 'No provider found for id ' . $woodSpeciesId], 400);
+            return $this->json(['error' => 'No wood species found for id ' . $woodSpeciesId], 400);
 
         $delivery->setDate($date)
             ->setVolume($request->request->get("volume"))

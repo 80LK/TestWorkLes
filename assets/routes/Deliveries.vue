@@ -130,17 +130,7 @@ export default {
       console.log(this.options);
       this.loading = true;
       const data = new URLSearchParams();
-      /*
-      *
-        groupBy: (...)
-        groupDesc: (...)
-        itemsPerPage: (...)
-        multiSort: (...)
-        mustSort: (...)
-        page: (...)
-        sortBy: (...)
-        sortDesc: (...)
-      * */
+
       data.append("count", this.options.itemsPerPage);
       data.append("offset", this.options.itemsPerPage * (this.options.page - 1));
 
