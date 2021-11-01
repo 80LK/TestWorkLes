@@ -70,6 +70,7 @@ export default {
       {
         text: 'Тип древесины',
         align: 'start',
+        sortable: false,
         value: 'woodSpecies'
       },
       {
@@ -78,6 +79,7 @@ export default {
       },
       {
         text: "Поставщик",
+        sortable: false,
         value: "provider"
       },
       {
@@ -87,7 +89,10 @@ export default {
       {text: '', value: 'data-table-expand'}
     ],
     expanded: [],
-    options: {},
+    options: {
+      sortBy: ["date"],
+      sortDesc: [true]
+    },
     total: 0,
 
     loading: true,
@@ -147,9 +152,6 @@ export default {
       this.total = parseInt(response.headers.get("Total"));
       this.loading = false;
     }
-  },
-  mounted() {
-    this.getData();
   }
 }
 </script>

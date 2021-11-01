@@ -27,7 +27,7 @@ class ApiDeliveryController extends AbstractController
     {
         $limit = (int)$request->get("count", 10);
         $offset = (int)$request->get("offset", 0);
-        $sort = $request->get("sort", ['id' => 'ASC']);
+        $sort = $request->get("sort", ['date' => 'ASC']);
 
         $deliveries = $repository->findBy([], $sort, $limit, $offset);
 
