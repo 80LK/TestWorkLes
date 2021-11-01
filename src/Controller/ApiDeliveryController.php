@@ -15,18 +15,25 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ApiDeliveryController extends AbstractController
 {
-    #[Route('/api/delivery/list', name: 'api_deliveries', methods: ["get"])]
-    public function index(DeliveryRepository $repository): Response
-    {
-        $deliveries = $repository->findAll();
-
-        return $this->custom_json($deliveries);
-    }
 
     private function custom_json($data, int $status = 200, $headers = [], $context = [])
     {
         $context[AbstractNormalizer::IGNORED_ATTRIBUTES] = ['__initializer__', '__cloner__', '__isInitialized__'];
         return parent::json($data, $status, $headers, $context);
+    }
+
+    #[Route('/api/delivery/list', name: 'api_deliveries', methods: ["get"])]
+    public function index(DeliveryRepository $repository, Request $request): Response
+    {
+        $limit = (int)$request->get("count", 10);
+        $offset = (int)$request->get("offset", 0);
+        $sort = $request->get("sort", ['id' => 'ASC']);
+
+        $deliveries = $repository->findBy([], $sort, $limit, $offset);
+
+        $total = $repository->count([]);
+
+        return $this->custom_json($deliveries, headers: ["total" => $total]);
     }
 
     #[Route('/api/delivery/{id<\d+>}', name: "api_delivery", methods: ["get"])]

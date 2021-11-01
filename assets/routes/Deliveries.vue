@@ -1,53 +1,39 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-simple-table>
-        <thead>
-        <tr>
-          <th class="text-left"> ID</th>
-          <th class="text-left"> Порода древисины</th>
-          <th class="text-left"> Объем</th>
-          <th class="text-left"> Поставщик</th>
-          <th class="text-left"> Дата поставки</th>
-          <th class="text-left"> Примечание</th>
-        </tr>
-        </thead>
-        <tbody>
-        <router-link
-            v-for="item in deliveries"
-            :key="item.id"
-            style="cursor: pointer;"
-            tag="tr"
-            to="/">
-          <td>{{ item.id }}</td>
-          <td>{{ item.woodSpecies.name }}</td>
-          <td>{{ item.volume }}</td>
-          <td>{{ getCompanyName(item.provider) }}</td>
-          <td>{{ new Date(item.date).toLocaleString() }}</td>
-          <td>{{ item.note }}</td>
-        </router-link>
-        <tr v-if="loading">
-          <td>
-            <v-skeleton-loader type="text"/>
+      <v-data-table
+          :single-expand="true"
+          :expanded.sync="expanded"
+          :loading="loading"
+          :headers="headers"
+          :items="deliveries"
+          :server-items-length="total"
+          :options.sync="options"
+          :footer-props="{
+            itemsPerPageText:'Элементов на странице',
+            itemsPerPageOptions:[1,5,10,15,20,25,50,100]
+          }"
+          multi-sort
+          show-expand
+          item-key="id"
+      >
+        <template
+            v-slot:item.data-table-expand="{item, expand, isExpanded}"
+        >
+          <v-icon v-if="item.note || false"
+                  icon
+                  :style="isExpanded ? 'transform: rotate(-180deg)' : ''"
+                  @click="expand(!isExpanded)">
+            mdi-chevron-down
+          </v-icon>
+
+        </template>
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :colspan="headers.length">
+            {{ item.note }}
           </td>
-          <td>
-            <v-skeleton-loader type="text"/>
-          </td>
-          <td>
-            <v-skeleton-loader type="text"/>
-          </td>
-          <td>
-            <v-skeleton-loader type="text"/>
-          </td>
-          <td>
-            <v-skeleton-loader type="text"/>
-          </td>
-          <td>
-            <v-skeleton-loader type="text"/>
-          </td>
-        </tr>
-        </tbody>
-      </v-simple-table>
+        </template>
+      </v-data-table>
 
       <NewDelivery v-model="open_dialog_add_delivery" @save="save"/>
 
@@ -68,17 +54,56 @@
 import {getCompanyName} from "../utils/provider";
 import NewDelivery from "../dialoges/NewDelivery";
 
+function getDeliveryItemForTable(item) {
+  item.woodSpecies = item.woodSpecies.name;
+  item.date = new Date(item.date).toLocaleString();
+  item.provider = getCompanyName(item.provider);
+  item["data-table-expand"] = false;
+  return item;
+}
+
 export default {
   name: "Deliveries",
   components: {NewDelivery},
   data: () => ({
+    headers: [
+      {
+        text: 'Тип древесины',
+        align: 'start',
+        value: 'woodSpecies'
+      },
+      {
+        text: "Объем",
+        value: "volume"
+      },
+      {
+        text: "Поставщик",
+        value: "provider"
+      },
+      {
+        text: "Дата поставки",
+        value: "date"
+      },
+      {text: '', value: 'data-table-expand'}
+    ],
+    expanded: [],
+    options: {},
+    total: 0,
+
     loading: true,
     open_dialog_add_delivery: false,
 
     deliveries: []
   }),
+  watch: {
+    options: {
+      handler() {
+        this.getData()
+      },
+      deep: true,
+    },
+  },
   methods: {
-    getCompanyName: getCompanyName,
     async save(new_data) {
       this.loading = true;
       new_data.date = new Date(new_data.date + " " + new_data.time).toISOString().slice(0, -5) + "+00:00";
@@ -97,18 +122,44 @@ export default {
       if (json_response.error) {
         alert(json_response.error);
       } else {
-        const delivery = json_response.success;
-        this.deliveries.push(delivery);
+        this.getData();
       }
+      this.loading = false;
+    },
+    async getData() {
+      console.log(this.options);
+      this.loading = true;
+      const data = new URLSearchParams();
+      /*
+      *
+        groupBy: (...)
+        groupDesc: (...)
+        itemsPerPage: (...)
+        multiSort: (...)
+        mustSort: (...)
+        page: (...)
+        sortBy: (...)
+        sortDesc: (...)
+      * */
+      data.append("count", this.options.itemsPerPage);
+      data.append("offset", this.options.itemsPerPage * (this.options.page - 1));
+
+      if (this.options.sortBy) {
+        for (const i in this.options.sortBy) {
+          const key = this.options.sortBy[i];
+          data.append(`sort[${key}]`, this.options.sortDesc[i] ? "DESC" : "ASC")
+        }
+      }
+      const response = await fetch("/api/delivery/list?" + data.toString());
+      const deliveries = await response.json();
+
+      this.deliveries = deliveries.map(getDeliveryItemForTable);
+      this.total = parseInt(response.headers.get("Total"));
       this.loading = false;
     }
   },
-  async mounted() {
-    const response = await fetch("/api/delivery/list");
-    const deliveries = await response.json();
-
-    this.deliveries = deliveries;
-    this.loading = false;
+  mounted() {
+    this.getData();
   }
 }
 </script>
