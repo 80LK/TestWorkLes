@@ -20,8 +20,7 @@
       </p>
     </v-card-text>
     <v-card-actions v-if="!loading">
-      <v-btn color="warning" text @click="$emit('edit', provider)">Редактировать</v-btn>
-      <v-btn color="error" text @click="$emit('delete', provider)">Удалить</v-btn>
+      <slot name="actions"></slot>
     </v-card-actions>
   </v-card>
 </template>

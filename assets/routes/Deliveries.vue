@@ -17,6 +17,7 @@
           multi-sort
           show-expand
           item-key="id"
+          @click:row="openDelivery"
       >
         <template
             v-slot:item.data-table-expand="{item, expand, isExpanded}"
@@ -53,11 +54,12 @@
 
 <script>
 import {getCompanyName} from "../utils/provider";
+import {dateToString} from "../utils/date";
 import NewDelivery from "../dialoges/NewDelivery";
 
 function getDeliveryItemForTable(item) {
   item.woodSpecies = item.woodSpecies.name;
-  item.date = new Date(item.date).toLocaleString();
+  item.date = dateToString(item.date);
   item.provider = getCompanyName(item.provider);
   item["data-table-expand"] = false;
   return item;
@@ -110,6 +112,9 @@ export default {
     },
   },
   methods: {
+    openDelivery(item){
+      this.$router.push("/delivery/"+item.id);
+    },
     async save(new_data) {
       this.loading = true;
       new_data.date = new Date(new_data.date + " " + new_data.time).toISOString().slice(0, -5) + "+00:00";

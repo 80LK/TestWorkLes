@@ -7,9 +7,12 @@
     >
       <ProviderCard :loading="loadings[item.id] || false"
                     :provider="item"
-                    @delete="removeProvider"
-                    @edit="openDialogEditProvider"
-      />
+      >
+        <template v-slot:actions>
+          <v-btn color="warning" text @click="openDialogEditProvider(item)">Редактировать</v-btn>
+          <v-btn color="error" text @click="removeProvider(item)">Удалить</v-btn>
+        </template>
+      </ProviderCard>
     </v-col>
 
     <ProviderEdit

@@ -72,7 +72,7 @@ export default {
       drawer: null,
       items: routes,
       right: null,
-      title: "Application"
+      title: "ТехноЛесКом"
     }
   }
 }
