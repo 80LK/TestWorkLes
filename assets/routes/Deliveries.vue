@@ -5,6 +5,7 @@
           :single-expand="true"
           :expanded.sync="expanded"
           :loading="loading"
+          loading-text="Загрузка"
           :headers="headers"
           :items="deliveries"
           :server-items-length="total"
