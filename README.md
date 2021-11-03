@@ -17,7 +17,7 @@ yarn install
 php ./bin/console doctrine:migration:migrate
 ```
 
-Запустить WebPack
+Запустить Encore
 ```
 yarn encore dev-server
 ```
