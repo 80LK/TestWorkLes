@@ -5,6 +5,13 @@ https://symfony.com/download
 
 Указать данные к базе дынных в .env
 
+установить зависимости
+```
+composer install
+
+yarn install
+```
+
 Мигрировать базу
 ```
 php ./bin/console doctrine:migration:migrate
