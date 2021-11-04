@@ -10,6 +10,7 @@
           :items="deliveries"
           :server-items-length="total"
           :options.sync="options"
+          no-data-text="Нет данных"
           :footer-props="{
             itemsPerPageText:'Элементов на странице',
             itemsPerPageOptions:[1,5,10,15,20,25,50,100]

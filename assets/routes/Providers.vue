@@ -1,6 +1,14 @@
 <template>
   <v-row>
+    <v-col 
+      cols=12
+      v-if="loadings[-1] && items.length == 0"
+    >
+      <p class="no-data">Нет данных</p>
+    </v-col>
+
     <v-col
+        v-if="!loadings[-1] || items.length != 0"
         v-for="item in items"
         :key="item.id"
         cols="12" md="4" sm="6"
@@ -59,7 +67,7 @@ export default {
     open_dialog_edit_provider: false,
     open_dialog_remove_provider: false,
     currentItem: null,
-    items: [{id: -1}, {id: -2}, {id: -3}],
+    items: [],
     loadings: {
       [-1]: true, [-2]: true, [-3]: true
     },
@@ -151,5 +159,9 @@ export default {
 </script>
 
 <style scoped>
-
+.no-data{
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+}
 </style>
