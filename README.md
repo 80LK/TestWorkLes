@@ -16,6 +16,7 @@ yarn install
 ```
 php ./bin/console doctrine:migration:migrate
 ```
+или импортировать из файла testwork.sql
 
 Запустить Encore
 ```
