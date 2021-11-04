@@ -138,7 +138,6 @@ export default {
       this.loading = false;
     },
     async getData() {
-      console.log(this.options);
       this.loading = true;
       const data = new URLSearchParams();
 
