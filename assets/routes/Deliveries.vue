@@ -74,7 +74,6 @@ export default {
       {
         text: 'Тип древесины',
         align: 'start',
-        sortable: false,
         value: 'woodSpecies'
       },
       {
@@ -83,7 +82,6 @@ export default {
       },
       {
         text: "Поставщик",
-        sortable: false,
         value: "provider"
       },
       {

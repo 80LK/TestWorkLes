@@ -19,6 +19,32 @@ class DeliveryRepository extends ServiceEntityRepository
         parent::__construct($registry, Delivery::class);
     }
 
+    public function findSortBy(array $orders = ["id" => "ASC"], int $limit = 10, int $offset = 0)
+    {
+        $joined = [];
+        $query = $this->createQueryBuilder("d")
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        foreach ($orders as $field => $order) {
+            $fieldSet = explode(".", $field);
+
+            if(isset($fieldSet[1])){
+                if(!in_array($fieldSet[0], $joined)){
+                    $query->join("d." . $fieldSet[0], $fieldSet[0]);
+                    $joined[] = $fieldSet[0];
+                }
+
+                $query->orderBy($field, $order);
+            }else{
+                $query->orderBy("d." . $field, $order);
+            }
+        }
+
+        return $query->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Delivery[] Returns an array of Delivery objects
     //  */

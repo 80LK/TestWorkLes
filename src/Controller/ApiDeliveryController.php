@@ -16,12 +16,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ApiDeliveryController extends AbstractController
 {
 
-    private function custom_json($data, int $status = 200, $headers = [], $context = [])
-    {
-        $context[AbstractNormalizer::IGNORED_ATTRIBUTES] = ['__initializer__', '__cloner__', '__isInitialized__'];
-        return parent::json($data, $status, $headers, $context);
-    }
-
     #[Route('/api/delivery/list', name: 'api_deliveries', methods: ["get"])]
     public function index(DeliveryRepository $repository, Request $request): Response
     {
@@ -29,11 +23,32 @@ class ApiDeliveryController extends AbstractController
         $offset = (int)$request->get("offset", 0);
         $sort = $request->get("sort", ['date' => 'ASC']);
 
-        $deliveries = $repository->findBy([], $sort, $limit, $offset);
+        foreach ($sort as $field => $type_sort) {
+            unset($sort[$field]);
+
+            if($field == "woodSpecies"){
+                $sort["wood_species.name"] = $type_sort;
+            }else if($field == "provider"){
+                $sort["provider.company_name"] = $type_sort;
+                $sort["provider.surname"] = $type_sort;
+                $sort["provider.name"] = $type_sort;
+                $sort["provider.father_name"] = $type_sort;
+            }else{
+                $sort[$field] = $type_sort;
+            }
+        }
+
+        $deliveries = $repository->findSortBy($sort, $limit, $offset);
 
         $total = $repository->count([]);
 
         return $this->custom_json($deliveries, headers: ["total" => $total]);
+    }
+
+    private function custom_json($data, int $status = 200, $headers = [], $context = [])
+    {
+        $context[AbstractNormalizer::IGNORED_ATTRIBUTES] = ['__initializer__', '__cloner__', '__isInitialized__'];
+        return parent::json($data, $status, $headers, $context);
     }
 
     #[Route('/api/delivery/{id<\d+>}', name: "api_delivery", methods: ["get"])]
@@ -90,4 +105,5 @@ class ApiDeliveryController extends AbstractController
 
         return $this->json(["success" => $delivery]);
     }
+
 }
